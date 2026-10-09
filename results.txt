@@ -1,0 +1,83 @@
+== 1. Dataset ==
+baskets N=17080, distinct items=3653, rows=384911
+items per basket: median=16, 90th percentile=48, max=540
+readme anchor: 85123A WHITE HANGING HEART T-LIGHT HOLDER in 1959 baskets = 11.47%
+small baskets (<= 16 items): 8660; big baskets (> 48 items): 1663
+
+== 2. Check of the miner against a brute-force pair count ==
+support >= 1% (count >= 171): Apriori pairs=413, brute-force pairs=413, count mismatches=0
+
+== 3. Threshold grid ==
+support | min count | frequent itemsets by size | rules at conf 30% / 50% / 60% / 80% | min lift at 30% | mining time
+0.5% | 86 | 5255 {"1":1320,"2":2206,"3":1161,"4":474,"5":88,"6":6} | 10723 / 5812 / 3958 / 1140 | 2.62 | 2611 ms
+1.0% | 171 | 1219 {"1":691,"2":413,"3":109,"4":6} | 950 / 456 / 238 / 39 | 2.64 | 1336 ms
+2.0% | 342 | 294 {"1":242,"2":51,"3":1} | 96 / 36 / 20 / 3 | 3.56 | 417 ms
+3.0% | 513 | 115 {"1":109,"2":6} | 12 / 6 / 5 / 0 | 6.53 | 200 ms
+5.0% | 854 | 27 {"1":27} | 0 / 0 / 0 / 0 | - | 171 ms
+
+== 4. Final table: support >= 1%, confidence >= 30% ==
+rules=950, rules with lift > 1=950, lowest lift=2.6366
+floor on lift: min confidence / largest P(B) = 0.30 / 0.1147 = 2.62
+rules by itemset size: {"2":516,"3":371,"4":63}
+lift gate check at support 0.5%, confidence 10%: rules=19058, rules with lift <= 1: 2
+  ALARM CLOCK BAKELIKE GREEN -> WHITE HANGING HEART T-LIGHT HOLDER | count(A∪B)=89 count(A)=784 count(B)=1959 support=0.52% confidence=11.35% lift=0.9898
+  ALARM CLOCK BAKELIKE RED -> WHITE HANGING HEART T-LIGHT HOLDER | count(A∪B)=98 count(A)=877 count(B)=1959 support=0.57% confidence=11.17% lift=0.9743
+top 10 rules by lift (one direction per pair):
+  HERB MARKER THYME -> HERB MARKER ROSEMARY | count(A∪B)=176 count(A)=186 count(B)=190 support=1.03% confidence=94.62% lift=85.0617
+  HERB MARKER THYME -> HERB MARKER PARSLEY | count(A∪B)=171 count(A)=186 count(B)=187 support=1.00% confidence=91.94% lift=83.9710
+  HERB MARKER PARSLEY -> HERB MARKER ROSEMARY | count(A∪B)=174 count(A)=187 count(B)=190 support=1.02% confidence=93.05% lift=83.6454
+  HERB MARKER ROSEMARY -> HERB MARKER BASIL | count(A∪B)=172 count(A)=190 count(B)=187 support=1.01% confidence=90.53% lift=82.6839
+  HERB MARKER PARSLEY -> HERB MARKER MINT | count(A∪B)=171 count(A)=187 count(B)=191 support=1.00% confidence=91.44% lift=81.7728
+  HERB MARKER ROSEMARY -> HERB MARKER MINT | count(A∪B)=173 count(A)=190 count(B)=191 support=1.01% confidence=91.05% lift=81.4230
+  REGENCY TEA PLATE ROSES + REGENCY TEA PLATE GREEN -> REGENCY TEA PLATE PINK | count(A∪B)=185 count(A)=229 count(B)=224 support=1.08% confidence=80.79% lift=61.5993
+  REGENCY TEA PLATE PINK -> REGENCY TEA PLATE GREEN | count(A∪B)=202 count(A)=224 count(B)=269 support=1.18% confidence=90.18% lift=57.2584
+  POPPY'S PLAYHOUSE LIVINGROOM -> POPPY'S PLAYHOUSE BEDROOM + POPPY'S PLAYHOUSE KITCHEN | count(A∪B)=186 count(A)=252 count(B)=254 support=1.09% confidence=73.81% lift=49.6325
+  SET/20 RED RETROSPOT PAPER NAPKINS + SET/6 RED SPOTTY PAPER CUPS -> SET/6 RED SPOTTY PAPER PLATES | count(A∪B)=177 count(A)=192 count(B)=325 support=1.04% confidence=92.19% lift=48.4481
+
+== 5. Useful rule ==
+A -> B: GREEN REGENCY TEACUP AND SAUCER -> ROSES REGENCY TEACUP AND SAUCER | count(A∪B)=541 count(A)=691 count(B)=780 support=3.17% confidence=78.29% lift=17.1440
+B -> A: ROSES REGENCY TEACUP AND SAUCER -> GREEN REGENCY TEACUP AND SAUCER | count(A∪B)=541 count(A)=780 count(B)=691 support=3.17% confidence=69.36% lift=17.1440
+by hand: support=541/17080=0.031674, confidence=541/691=0.782923, P(B)=780/17080=0.045667, lift=17.144013
+  all baskets (plain scan): baskets=17080 count(A)=691 count(B)=780 count(A∪B)=541 confidence=78.3% lift=17.14 baseline P(B)=4.6%
+  small baskets <= 16: baskets=8660 count(A)=214 count(B)=236 count(A∪B)=157 confidence=73.4% lift=26.92 baseline P(B)=2.7%
+  big baskets > 48: baskets=1663 count(A)=144 count(B)=160 count(A∪B)=118 confidence=81.9% lift=8.52 baseline P(B)=9.6%
+share of count(A∪B) from big baskets: 21.8%
+rules from the 3-teacup set:
+  GREEN REGENCY TEACUP AND SAUCER + ROSES REGENCY TEACUP AND SAUCER -> PINK REGENCY TEACUP AND SAUCER | count(A∪B)=390 count(A)=541 count(B)=551 support=2.28% confidence=72.09% lift=22.3462
+  PINK REGENCY TEACUP AND SAUCER -> GREEN REGENCY TEACUP AND SAUCER + ROSES REGENCY TEACUP AND SAUCER | count(A∪B)=390 count(A)=551 count(B)=541 support=2.28% confidence=70.78% lift=22.3462
+  PINK REGENCY TEACUP AND SAUCER + ROSES REGENCY TEACUP AND SAUCER -> GREEN REGENCY TEACUP AND SAUCER | count(A∪B)=390 count(A)=436 count(B)=691 support=2.28% confidence=89.45% lift=22.1100
+  GREEN REGENCY TEACUP AND SAUCER -> PINK REGENCY TEACUP AND SAUCER + ROSES REGENCY TEACUP AND SAUCER | count(A∪B)=390 count(A)=691 count(B)=436 support=2.28% confidence=56.44% lift=22.1100
+  GREEN REGENCY TEACUP AND SAUCER + PINK REGENCY TEACUP AND SAUCER -> ROSES REGENCY TEACUP AND SAUCER | count(A∪B)=390 count(A)=460 count(B)=780 support=2.28% confidence=84.78% lift=18.5652
+  ROSES REGENCY TEACUP AND SAUCER -> GREEN REGENCY TEACUP AND SAUCER + PINK REGENCY TEACUP AND SAUCER | count(A∪B)=390 count(A)=780 count(B)=460 support=2.28% confidence=50.00% lift=18.5652
+pink single-item rule for comparison: PINK REGENCY TEACUP AND SAUCER -> ROSES REGENCY TEACUP AND SAUCER | count(A∪B)=436 count(A)=551 count(B)=780 support=2.55% confidence=79.13% lift=17.3272
+
+== 6. Rule to reject ==
+lowest-lift rule in the final table: SMALL WHITE HEART OF WICKER -> WHITE HANGING HEART T-LIGHT HOLDER | count(A∪B)=176 count(A)=582 count(B)=1959 support=1.03% confidence=30.24% lift=2.6366
+its reverse: WHITE HANGING HEART T-LIGHT HOLDER -> SMALL WHITE HEART OF WICKER | count(A∪B)=176 count(A)=1959 count(B)=582 support=1.03% confidence=8.98% lift=2.6366
+  all baskets (plain scan): baskets=17080 count(A)=582 count(B)=1959 count(A∪B)=176 confidence=30.2% lift=2.64 baseline P(B)=11.5%
+  small baskets <= 16: baskets=8660 count(A)=100 count(B)=596 count(A∪B)=20 confidence=20.0% lift=2.91 baseline P(B)=6.9%
+  big baskets > 48: baskets=1663 count(A)=195 count(B)=451 count(A∪B)=81 confidence=41.5% lift=1.53 baseline P(B)=27.1%
+share of count(A∪B) from big baskets: 46.0%
+rules in the final table whose B is 85123A: 10; position of this rule by lift: 950 of 950
+of the 10 lowest-lift rules in the final table, 8 have 85123A as B
+redundant 3-item rule (adding an item does not change confidence):
+  LUNCH BAG RED RETROSPOT + LUNCH BAG SUKI DESIGN -> JUMBO BAG RED RETROSPOT | count(A∪B)=176 count(A)=519 count(B)=1584 support=1.03% confidence=33.91% lift=3.6566
+  LUNCH BAG RED RETROSPOT -> JUMBO BAG RED RETROSPOT | count(A∪B)=425 count(A)=1288 count(B)=1584 support=2.49% confidence=33.00% lift=3.5580
+
+== 7. Rule direction ==
+A -> B: JUMBO BAG PINK POLKADOT -> JUMBO BAG RED RETROSPOT | count(A∪B)=546 count(A)=869 count(B)=1584 support=3.20% confidence=62.83% lift=6.7749
+B -> A: JUMBO BAG RED RETROSPOT -> JUMBO BAG PINK POLKADOT | count(A∪B)=546 count(A)=1584 count(B)=869 support=3.20% confidence=34.47% lift=6.7749
+pair rules in the final table: 516; of them 130 pass 30% in one direction only
+
+== 8. What changes between thresholds ==
+1% -> 2% support: 950 -> 96 rules; lost 854
+of the 20 highest-lift rules at 1%, still present at 2%: 0
+highest lift at 1%: 85.06; highest lift at 2%: 22.35 (GREEN REGENCY TEACUP AND SAUCER + ROSES REGENCY TEACUP AND SAUCER -> PINK REGENCY TEACUP AND SAUCER)
+0.5% support: 10723 rules, of them 9377 (87.4%) come from itemsets of 3+ items
+1% support: 950 rules, of them 434 (45.7%) come from itemsets of 3+ items
+
+== 9. Stability on a random half split (NOT a time split) ==
+half A: 8540 baskets, 958 rules at 1%/30%
+same rules in half B: 749 (78.2%) still pass both thresholds; median lift(B)/lift(A)=1.019
+  teacup rule, half A: baskets=8540 count(A)=366 count(B)=408 count(A∪B)=296 confidence=80.9% lift=16.93 baseline P(B)=4.8%
+  teacup rule, half B: baskets=8540 count(A)=325 count(B)=372 count(A∪B)=245 confidence=75.4% lift=17.31 baseline P(B)=4.4%
